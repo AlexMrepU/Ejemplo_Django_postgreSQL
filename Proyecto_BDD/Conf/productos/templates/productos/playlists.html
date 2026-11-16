@@ -1,0 +1,52 @@
+{% extends 'productos/base.html' %}
+{% load musica %}
+
+{% block titulo %}Mis playlists | Playlist Manager{% endblock %}
+
+{% block contenido %}
+
+<div class="encabezado">
+    <div>
+        <h1>Mis playlists</h1>
+        <p>Solo usted puede modificarlas. Las marcadas como públicas aparecen en Explorar para los demás.</p>
+    </div>
+</div>
+
+<form method="POST" action="{% url 'crear_playlist' %}" class="panel mb-4" novalidate>
+    {% csrf_token %}
+    <label for="{{ form.nombre.id_for_label }}" class="form-label fw-semibold">Crear una playlist</label>
+    <div class="d-flex flex-wrap gap-3 align-items-center">
+        <div class="flex-grow-1" style="min-width: 14rem">{{ form.nombre }}</div>
+        <div class="form-check m-0">
+            {{ form.publica }}
+            <label class="form-check-label" for="{{ form.publica.id_for_label }}">Pública</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Crear playlist</button>
+    </div>
+    {% for error in form.nombre.errors %}
+        <div class="text-danger small mt-1">{{ error }}</div>
+    {% endfor %}
+</form>
+
+{% if pagina %}
+    <div class="rejilla-playlists">
+        {% for playlist in pagina %}
+            {% include 'productos/_tarjeta_playlist.html' %}
+        {% endfor %}
+    </div>
+    {% include 'productos/_paginacion.html' %}
+{% else %}
+    <p class="text-secundario">Todavía no tiene playlists. Escriba un nombre arriba para crear la primera.</p>
+{% endif %}
+
+{% if sin_duenio %}
+    <h2 class="h5 mt-5">Playlists sin dueño</h2>
+    <p class="text-secundario">Se crearon antes de que existiera el inicio de sesión. Como administrador puede verlas o eliminarlas.</p>
+    <div class="rejilla-playlists">
+        {% for playlist in sin_duenio %}
+            {% include 'productos/_tarjeta_playlist.html' %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock %}

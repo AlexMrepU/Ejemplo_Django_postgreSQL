@@ -1,0 +1,12 @@
+{% extends 'productos/base.html' %}
+{% block titulo %}Sin permiso | Playlist Manager{% endblock %}
+{% block contenido %}
+<div class="encabezado">
+    <div>
+        <h1>No tiene permiso para esta acción</h1>
+        <p>{{ exception|default:"Su cuenta no tiene el rol necesario." }}</p>
+    </div>
+</div>
+<p>Si necesita gestionar el catálogo, pida a un administrador que le asigne el rol Administrador.</p>
+<a href="{% url 'inicio' %}" class="btn btn-outline-primary">Ir al inicio</a>
+{% endblock %}

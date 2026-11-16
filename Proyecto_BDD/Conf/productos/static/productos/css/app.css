@@ -1,0 +1,452 @@
+/*
+ * Playlist Manager: tema visual sobre Bootstrap 5.3
+ *
+ * Paleta
+ *   --tinta    #17202E  texto principal
+ *   --petroleo #0E3B43  barra lateral
+ *   --ambar    #F2A93B  acento (acciones principales, elemento activo)
+ *   --lienzo   #EEF1F4  fondo de la página
+ *   --gris     #5B6675  texto secundario
+ *
+ * Tipografía: Bricolage Grotesque (títulos) y Figtree (texto).
+ */
+
+:root {
+    --tinta: #17202E;
+    --petroleo: #0E3B43;
+    --petroleo-claro: #15525C;
+    --ambar: #F2A93B;
+    --ambar-oscuro: #D88E1E;
+    --lienzo: #EEF1F4;
+    --gris: #5B6675;
+    --linea: #DCE1E7;
+
+    --bs-body-font-family: 'Figtree', system-ui, sans-serif;
+    --bs-body-color: var(--tinta);
+    --bs-body-bg: var(--lienzo);
+    --bs-link-color-rgb: 21, 82, 92;
+    --bs-link-hover-color-rgb: 14, 59, 67;
+    --bs-border-color: var(--linea);
+    --bs-border-radius: .5rem;
+}
+
+h1, h2, h3, h4, h5, .titulo {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -.01em;
+}
+
+.num { font-variant-numeric: tabular-nums; }
+.text-secundario { color: var(--gris); }
+
+/* ---------------------------------------------------------- Botones */
+
+.btn-primary {
+    --bs-btn-color: var(--tinta);
+    --bs-btn-bg: var(--ambar);
+    --bs-btn-border-color: var(--ambar);
+    --bs-btn-hover-color: var(--tinta);
+    --bs-btn-hover-bg: var(--ambar-oscuro);
+    --bs-btn-hover-border-color: var(--ambar-oscuro);
+    --bs-btn-active-bg: var(--ambar-oscuro);
+    --bs-btn-active-border-color: var(--ambar-oscuro);
+    --bs-btn-active-color: var(--tinta);
+    font-weight: 600;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: var(--petroleo-claro);
+    --bs-btn-border-color: var(--petroleo-claro);
+    --bs-btn-hover-bg: var(--petroleo-claro);
+    --bs-btn-hover-border-color: var(--petroleo-claro);
+    --bs-btn-active-bg: var(--petroleo);
+}
+
+.btn-icono {
+    --bs-btn-padding-x: .45rem;
+    --bs-btn-padding-y: .15rem;
+    line-height: 1;
+}
+
+:focus-visible {
+    outline: 3px solid var(--ambar);
+    outline-offset: 2px;
+}
+
+.form-control, .form-select { background-color: #fff; }
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--petroleo-claro);
+    box-shadow: 0 0 0 .2rem rgba(21, 82, 92, .2);
+}
+
+/* ---------------------------------------------------------- Estructura */
+
+.app {
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    min-height: 100vh;
+}
+
+.lateral {
+    background: var(--petroleo);
+    color: #fff;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.marca {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 1.35rem;
+    line-height: 1.1;
+    color: #fff;
+    text-decoration: none;
+    padding: 0 .5rem;
+}
+.marca span { color: var(--ambar); }
+.lateral .marca span { display: block; }
+
+.menu { display: flex; flex-direction: column; gap: .15rem; }
+.menu-grupo {
+    font-size: .8rem;
+    color: rgba(255, 255, 255, .55);
+    padding: .9rem .75rem .3rem;
+}
+.menu a {
+    color: rgba(255, 255, 255, .82);
+    text-decoration: none;
+    padding: .5rem .75rem;
+    border-radius: .4rem;
+    border-left: 3px solid transparent;
+}
+.menu a:hover { background: var(--petroleo-claro); color: #fff; }
+.menu a.activo {
+    color: #fff;
+    background: rgba(255, 255, 255, .08);
+    border-left-color: var(--ambar);
+    font-weight: 600;
+}
+
+.cuenta {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, .15);
+    padding: 1rem .5rem 0;
+    font-size: .9rem;
+}
+.cuenta .rol {
+    display: inline-block;
+    font-size: .75rem;
+    padding: .1rem .5rem;
+    border-radius: 1rem;
+    background: rgba(242, 169, 59, .2);
+    color: var(--ambar);
+    margin-top: .2rem;
+}
+.cuenta button {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: rgba(255, 255, 255, .7);
+    text-decoration: underline;
+    margin-top: .75rem;
+}
+.cuenta button:hover { color: #fff; }
+
+.contenido {
+    padding: 2rem 2.5rem 4rem;
+    max-width: 76rem;
+    width: 100%;
+}
+
+.encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.encabezado h1 { font-size: 2rem; margin: 0; }
+.encabezado p { margin: .25rem 0 0; color: var(--gris); }
+
+@media (max-width: 860px) {
+    .app { grid-template-columns: minmax(0, 1fr); }
+    .lateral {
+        position: static;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: .75rem;
+        padding: .75rem 1rem;
+    }
+    .lateral .marca span { display: inline; }
+    .menu {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        order: 3;
+        width: 100%;
+    }
+    .menu a { white-space: nowrap; }
+    .menu-grupo { display: none; }
+    .menu a { border-left: 0; border-bottom: 3px solid transparent; padding: .35rem .6rem; }
+    .menu a.activo { border-bottom-color: var(--ambar); }
+    .cuenta {
+        margin: 0 0 0 auto;
+        border: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+    .cuenta > div { display: none; }
+    .cuenta button { margin: 0; }
+    .contenido { padding: 1.25rem 1rem 3rem; }
+}
+
+/* ---------------------------------------------------------- Paneles y tablas */
+
+.panel {
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: .75rem;
+    padding: 1.25rem;
+}
+
+.tabla {
+    --bs-table-bg: #fff;
+    --bs-table-hover-bg: #F6F8FA;
+    margin: 0;
+}
+.tabla-marco {
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: .75rem;
+    overflow-x: auto;
+}
+.tabla thead th {
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--gris);
+    background: #F8F9FB;
+    border-bottom: 1px solid var(--linea);
+    padding: .7rem 1rem;
+    white-space: nowrap;
+}
+.tabla td { padding: .65rem 1rem; vertical-align: middle; }
+.tabla tbody tr:last-child td { border-bottom: 0; }
+.tabla .sub { display: block; font-size: .85rem; color: var(--gris); }
+
+/* Barra de filtros del catálogo */
+.filtros {
+    display: grid;
+    grid-template-columns: minmax(12rem, 2fr) minmax(10.5rem, 1fr) 6rem 6rem minmax(9.5rem, 1fr) auto;
+    gap: .6rem;
+    align-items: end;
+}
+.filtros label { font-size: .8rem; color: var(--gris); margin-bottom: .2rem; }
+@media (max-width: 1000px) {
+    .filtros { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .filtros .campo-q { grid-column: 1 / -1; }
+}
+
+.resumen-resultados {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0 .6rem;
+    font-size: .9rem;
+    color: var(--gris);
+}
+
+/* ---------------------------------------------------------- Paginación */
+
+.paginacion .page-link { color: var(--petroleo-claro); }
+.paginacion .active > .page-link {
+    background: var(--petroleo);
+    border-color: var(--petroleo);
+    color: #fff;
+}
+
+/* ---------------------------------------------------------- Portadas
+ * Cada playlist recibe un tono (--tono, de 0 a 359) calculado desde su id.
+ * La portada es un mosaico de cuatro bloques en variaciones de ese tono,
+ * como la funda de un disco. No hace falta subir ninguna imagen.
+ */
+
+.portada {
+    --tono: 200;
+    aspect-ratio: 1;
+    border-radius: .5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.portada i:nth-child(1) { background: hsl(var(--tono) 55% 32%); }
+.portada i:nth-child(2) { background: hsl(calc(var(--tono) + 30) 70% 55%); }
+.portada i:nth-child(3) { background: hsl(calc(var(--tono) - 25) 60% 68%); }
+.portada i:nth-child(4) {
+    background: hsl(var(--tono) 45% 20%);
+    border-top-left-radius: 100%;
+}
+
+.rejilla-playlists {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+    gap: 1.25rem;
+}
+.tarjeta-playlist {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+}
+.tarjeta-playlist .portada { width: 100%; }
+.tarjeta-playlist strong { font-size: 1rem; line-height: 1.25; }
+.tarjeta-playlist small { color: var(--gris); }
+.tarjeta-playlist:hover strong { text-decoration: underline; }
+.etiqueta-publica {
+    font-size: .72rem;
+    border: 1px solid var(--linea);
+    border-radius: 1rem;
+    padding: 0 .45rem;
+    margin-left: .3rem;
+    color: var(--gris);
+    background: #fff;
+}
+
+/* Encabezado del detalle de una playlist: la portada grande es el
+   elemento protagonista de la aplicación. */
+.cabecera-playlist {
+    display: flex;
+    gap: 1.75rem;
+    align-items: end;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.cabecera-playlist .portada { width: 11rem; box-shadow: 0 12px 30px -12px hsl(var(--tono) 50% 25% / .6); }
+.cabecera-playlist h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1;
+    margin: .2rem 0 .6rem;
+}
+.cabecera-playlist .datos { color: var(--gris); }
+
+/* Posición dentro de la playlist: es un orden real, por eso se muestra */
+.posicion {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: var(--gris);
+    width: 3rem;
+}
+
+/* Fila resaltada al volver de "subir/bajar" (ancla #c123) */
+tr:target td { background: #FFF6E6; }
+@media (prefers-reduced-motion: no-preference) {
+    tr:target td { transition: background 1.2s ease 0.6s; }
+}
+
+/* ---------------------------------------------------------- Autocompletado */
+
+.buscador { position: relative; }
+.sugerencias {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: .5rem;
+    box-shadow: 0 10px 25px -10px rgba(23, 32, 46, .3);
+    max-height: 22rem;
+    overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: .3rem;
+}
+.sugerencias li {
+    padding: .5rem .7rem;
+    border-radius: .35rem;
+    cursor: pointer;
+}
+.sugerencias li[aria-selected="true"], .sugerencias li:hover { background: var(--lienzo); }
+.sugerencias li small { color: var(--gris); display: block; }
+.sugerencias .vacio { color: var(--gris); cursor: default; }
+
+/* ---------------------------------------------------------- Inicio */
+
+.cifras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+.cifra {
+    background: #fff;
+    border: 1px solid var(--linea);
+    border-radius: .75rem;
+    padding: 1rem 1.25rem;
+    text-decoration: none;
+    color: inherit;
+}
+.cifra strong {
+    display: block;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+.cifra span { color: var(--gris); }
+.cifra:hover { border-color: var(--petroleo-claro); }
+
+/* ---------------------------------------------------------- Login y registro */
+
+.acceso {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.acceso-marca {
+    background: var(--petroleo);
+    color: #fff;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.acceso-marca h1 {
+    font-size: clamp(2.5rem, 5vw, 4.25rem);
+    font-weight: 800;
+    line-height: .95;
+    max-width: 9ch;
+}
+.acceso-marca h1 span { color: var(--ambar); }
+.acceso-marca p { color: rgba(255, 255, 255, .75); max-width: 30rem; }
+.acceso-mosaico { display: flex; gap: .6rem; }
+.acceso-mosaico .portada { width: 4.5rem; }
+.acceso-formulario {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+.acceso-formulario > div { width: 100%; max-width: 26rem; }
+@media (max-width: 860px) {
+    .acceso { grid-template-columns: 1fr; }
+    .acceso-marca { padding: 1.5rem; gap: 1rem; }
+    .acceso-mosaico { display: none; }
+}

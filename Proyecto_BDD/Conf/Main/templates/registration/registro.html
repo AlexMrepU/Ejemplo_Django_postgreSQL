@@ -1,0 +1,21 @@
+{% extends 'registration/_acceso.html' %}
+{% block titulo %}Crear cuenta | Playlist Manager{% endblock %}
+{% block formulario %}
+<h2 class="mb-1">Crear cuenta</h2>
+<p class="text-secundario mb-4">¿Ya tiene una? <a href="{% url 'login' %}">Inicie sesión</a>.</p>
+
+<form method="POST" novalidate>
+    {% csrf_token %}
+    {% for error in form.non_field_errors %}<div class="alert alert-danger">{{ error }}</div>{% endfor %}
+    <div class="row g-2">
+        <div class="col-sm-6">{% include 'registration/_campo.html' with campo=form.first_name %}</div>
+        <div class="col-sm-6">{% include 'registration/_campo.html' with campo=form.last_name %}</div>
+    </div>
+    {% include 'registration/_campo.html' with campo=form.cedula %}
+    {% include 'registration/_campo.html' with campo=form.email %}
+    {% include 'registration/_campo.html' with campo=form.username %}
+    {% include 'registration/_campo.html' with campo=form.password1 mostrar_ayuda=True %}
+    {% include 'registration/_campo.html' with campo=form.password2 %}
+    <button type="submit" class="btn btn-primary w-100 mt-2">Crear cuenta</button>
+</form>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% load musica %}
+<a class="tarjeta-playlist" href="{% url 'detalle_playlist' playlist.id_playlist %}">
+    <div class="portada" style="--tono: {{ playlist.id_playlist|portada }}" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div>
+        <strong>{{ playlist.nombre }}</strong>{% if playlist.publica and not mostrar_autor %}<span class="etiqueta-publica">Pública</span>{% endif %}
+        <br>
+        <small>
+            {% if mostrar_autor %}De {{ playlist.propietario.get_full_name|default:playlist.propietario.username }}, {% endif %}{{ playlist.num_canciones }} canci{{ playlist.num_canciones|pluralize:"ón,ones" }}
+        </small>
+    </div>
+</a>

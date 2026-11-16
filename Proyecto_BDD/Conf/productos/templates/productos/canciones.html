@@ -1,0 +1,111 @@
+{% extends 'productos/base.html' %}
+{% load musica %}
+
+{% block titulo %}Canciones | Playlist Manager{% endblock %}
+
+{% block contenido %}
+
+<div class="encabezado">
+    <div>
+        <h1>Canciones</h1>
+        <p>Catálogo completo. Para agregar una canción a una playlist, abra la playlist y búsquela ahí.</p>
+    </div>
+    {% if es_admin %}
+        <a href="{% url 'crear_cancion' %}" class="btn btn-primary">Nueva canción</a>
+    {% endif %}
+</div>
+
+{% if es_admin and not hay_artistas %}
+    <div class="alert alert-info">
+        Para registrar canciones primero necesita <a href="{% url 'crear_artista' %}">crear un artista</a>.
+    </div>
+{% endif %}
+
+<form method="GET" class="panel filtros" role="search">
+    <div class="campo-q">
+        <label for="{{ filtro.q.id_for_label }}">{{ filtro.q.label }}</label>
+        {{ filtro.q }}
+    </div>
+    <div>
+        <label for="{{ filtro.genero.id_for_label }}">{{ filtro.genero.label }}</label>
+        {{ filtro.genero }}
+    </div>
+    <div>
+        <label for="{{ filtro.anio_desde.id_for_label }}">Año desde</label>
+        {{ filtro.anio_desde }}
+    </div>
+    <div>
+        <label for="{{ filtro.anio_hasta.id_for_label }}">Hasta</label>
+        {{ filtro.anio_hasta }}
+    </div>
+    <div>
+        <label for="{{ filtro.orden.id_for_label }}">{{ filtro.orden.label }}</label>
+        {{ filtro.orden }}
+    </div>
+    <div>
+        <button class="btn btn-outline-primary w-100" type="submit">Aplicar</button>
+    </div>
+</form>
+
+{% if filtro.errors %}
+    <div class="alert alert-warning mt-3">Revise los años: deben ser números desde 1900.</div>
+{% endif %}
+
+<div class="resumen-resultados">
+    <span>
+        {{ pagina.paginator.count|miles }} canci{{ pagina.paginator.count|pluralize:"ón,ones" }}
+        {% if pagina.paginator.num_pages > 1 %}(mostrando {{ pagina.start_index|miles }} a {{ pagina.end_index|miles }}){% endif %}
+    </span>
+    {% if hay_filtros %}<a href="{% url 'listar_canciones' %}">Quitar filtros</a>{% endif %}
+</div>
+
+<div class="tabla-marco">
+<table class="table tabla table-hover">
+    <thead>
+        <tr>
+            <th>Canción</th>
+            <th>Género</th>
+            <th class="text-end">Año</th>
+            <th class="text-end">Duración</th>
+            <th class="text-end">Popularidad</th>
+            {% if es_admin %}<th class="text-end">Acciones</th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for cancion in pagina %}
+            <tr>
+                <td>
+                    {{ cancion.titulo }}
+                    <span class="sub">{{ cancion.artista.nombre }}</span>
+                </td>
+                <td>{{ cancion.genero|default:"-" }}</td>
+                <td class="text-end num">{{ cancion.anio|default:"-" }}</td>
+                <td class="text-end num">{{ cancion.duracion_segundos|duracion }}</td>
+                <td class="text-end num">{{ cancion.popularidad|default_if_none:"-" }}</td>
+                {% if es_admin %}
+                <td class="text-end text-nowrap">
+                    <a href="{% url 'editar_cancion' cancion.id_cancion %}"
+                       class="btn btn-sm btn-outline-secondary">Editar</a>
+                    <a href="{% url 'eliminar_cancion' cancion.id_cancion %}"
+                       class="btn btn-sm btn-outline-danger">Eliminar</a>
+                </td>
+                {% endif %}
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-secundario py-4">
+                    {% if hay_filtros %}
+                        Ninguna canción cumple los filtros. <a href="{% url 'listar_canciones' %}">Quitar filtros</a>.
+                    {% else %}
+                        Todavía no hay canciones en el catálogo.
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+{% include 'productos/_paginacion.html' %}
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% load musica %}
+{% comment %}
+    Paginación reutilizable. Recibe "pagina" (un Page de Django).
+    get_elided_page_range muestra: 1 … 7 8 [9] 10 11 … 4000
+    en lugar de 4000 enlaces.
+{% endcomment %}
+{% if pagina.paginator.num_pages > 1 %}
+<nav class="paginacion mt-3" aria-label="Paginación">
+    <ul class="pagination pagination-sm flex-wrap mb-0">
+        {% if pagina.has_previous %}
+            <li class="page-item"><a class="page-link" href="{% url_pagina pagina.previous_page_number %}">Anterior</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Anterior</span></li>
+        {% endif %}
+
+        {% for numero in pagina.rango %}
+            {% if numero == pagina.paginator.ELLIPSIS %}
+                <li class="page-item disabled"><span class="page-link">{{ numero }}</span></li>
+            {% elif numero == pagina.number %}
+                <li class="page-item active" aria-current="page"><span class="page-link">{{ numero }}</span></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="{% url_pagina numero %}">{{ numero }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if pagina.has_next %}
+            <li class="page-item"><a class="page-link" href="{% url_pagina pagina.next_page_number %}">Siguiente</a></li>
+        {% else %}
+            <li class="page-item disabled"><span class="page-link">Siguiente</span></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

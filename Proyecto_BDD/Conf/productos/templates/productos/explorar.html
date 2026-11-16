@@ -1,0 +1,37 @@
+{% extends 'productos/base.html' %}
+{% load musica %}
+
+{% block titulo %}Explorar | Playlist Manager{% endblock %}
+
+{% block contenido %}
+
+<div class="encabezado">
+    <div>
+        <h1>Explorar</h1>
+        <p>Playlists que otros usuarios decidieron compartir.</p>
+    </div>
+</div>
+
+<form method="GET" class="mb-4" role="search">
+    <div class="input-group">
+        <input type="search" name="q" value="{{ q }}" class="form-control"
+               placeholder="Buscar por nombre de playlist" aria-label="Buscar playlists">
+        <button class="btn btn-outline-primary" type="submit">Buscar</button>
+        {% if q %}<a href="{% url 'explorar_playlists' %}" class="btn btn-outline-secondary">Limpiar</a>{% endif %}
+    </div>
+</form>
+
+{% if pagina %}
+    <div class="rejilla-playlists">
+        {% for playlist in pagina %}
+            {% include 'productos/_tarjeta_playlist.html' with mostrar_autor=True %}
+        {% endfor %}
+    </div>
+    {% include 'productos/_paginacion.html' %}
+{% elif q %}
+    <p class="text-secundario">Ninguna playlist pública coincide con "{{ q }}".</p>
+{% else %}
+    <p class="text-secundario">Nadie ha compartido playlists todavía. Marque una de las suyas como pública para que aparezca aquí.</p>
+{% endif %}
+
+{% endblock %}

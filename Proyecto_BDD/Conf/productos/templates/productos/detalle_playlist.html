@@ -1,0 +1,115 @@
+{% extends 'productos/base.html' %}
+{% load static musica %}
+
+{% block titulo %}{{ playlist.nombre }} | Playlist Manager{% endblock %}
+
+{% block contenido %}
+
+<div class="cabecera-playlist" style="--tono: {{ playlist.id_playlist|portada }}">
+    <div class="portada" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <div class="flex-grow-1">
+        <span class="text-secundario">{% if playlist.publica %}Playlist pública{% else %}Playlist privada{% endif %}</span>
+        <h1>{{ playlist.nombre }}</h1>
+        <div class="datos">
+            {% if not playlist.es_duenio %}
+                De {{ playlist.propietario.get_full_name|default:playlist.propietario.username|default:"(sin dueño)" }}.
+            {% endif %}
+            {{ canciones|length }} canci{{ canciones|length|pluralize:"ón,ones" }}, {{ duracion_total|duracion }} en total.
+        </div>
+    </div>
+    <div class="d-flex gap-2">
+        {% if playlist.es_duenio %}
+            <a href="{% url 'editar_playlist' playlist.id_playlist %}" class="btn btn-outline-primary">Editar</a>
+        {% endif %}
+        {% if puede_eliminar %}
+            <a href="{% url 'eliminar_playlist' playlist.id_playlist %}" class="btn btn-outline-danger">Eliminar</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if playlist.es_duenio %}
+<form method="POST" action="{% url 'agregar_cancion' playlist.id_playlist %}" class="panel mb-4">
+    {% csrf_token %}
+    <label for="buscar-cancion" class="form-label fw-semibold">Agregar canción</label>
+    <div class="buscador" data-autocompletar
+         data-url="{% url 'buscar_canciones' %}?playlist={{ playlist.id_playlist }}">
+        <div class="input-group">
+            <input type="search" id="buscar-cancion" class="form-control" autocomplete="off"
+                   placeholder="Escriba al menos 2 letras del título"
+                   role="combobox" aria-expanded="false" aria-controls="lista-sugerencias">
+            <button type="submit" class="btn btn-primary" disabled>Agregar</button>
+        </div>
+        <input type="hidden" name="cancion">
+        <ul class="sugerencias" id="lista-sugerencias" role="listbox" hidden></ul>
+    </div>
+</form>
+{% endif %}
+
+<div class="tabla-marco">
+<table class="table tabla table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Canción</th>
+            <th>Género</th>
+            <th class="text-end">Duración</th>
+            {% if playlist.es_duenio %}<th class="text-end">Orden</th><th></th>{% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for cancion in canciones %}
+            <tr id="c{{ cancion.id_cancion }}">
+                <td class="posicion">{{ cancion.posicion }}</td>
+                <td>{{ cancion.titulo }}<span class="sub">{{ cancion.artista }}</span></td>
+                <td>{{ cancion.genero|default:"-" }}</td>
+                <td class="text-end num">{{ cancion.duracion_segundos|duracion }}</td>
+                {% if playlist.es_duenio %}
+                <td class="text-end text-nowrap">
+                    {# Reordenar y quitar modifican datos: van en formularios POST, no en enlaces #}
+                    <form method="POST" action="{% url 'mover_cancion' playlist.id_playlist cancion.id_cancion 'subir' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-secondary btn-icono"
+                                {% if forloop.first %}disabled{% endif %}
+                                aria-label="Subir {{ cancion.titulo }}" title="Subir">&uarr;</button>
+                    </form>
+                    <form method="POST" action="{% url 'mover_cancion' playlist.id_playlist cancion.id_cancion 'bajar' %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-secondary btn-icono"
+                                {% if forloop.last %}disabled{% endif %}
+                                aria-label="Bajar {{ cancion.titulo }}" title="Bajar">&darr;</button>
+                    </form>
+                </td>
+                <td class="text-end">
+                    <form method="POST"
+                          action="{% url 'quitar_cancion' playlist.id_playlist cancion.id_cancion %}"
+                          class="d-inline"
+                          onsubmit="return confirm('¿Quitar esta canción de la playlist?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Quitar</button>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6" class="text-center text-secundario py-4">
+                    {% if playlist.es_duenio %}
+                        La playlist está vacía. Use el buscador de arriba para agregar la primera canción.
+                    {% else %}
+                        Esta playlist todavía no tiene canciones.
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<a href="{% if playlist.es_duenio %}{% url 'listar_playlists' %}{% else %}{% url 'explorar_playlists' %}{% endif %}"
+   class="btn btn-outline-secondary mt-4">Volver</a>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'productos/js/autocompletar.js' %}"></script>
+{% endblock %}

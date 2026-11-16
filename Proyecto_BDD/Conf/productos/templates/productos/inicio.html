@@ -1,0 +1,54 @@
+{% extends 'productos/base.html' %}
+{% load musica %}
+
+{% block contenido %}
+
+<div class="encabezado">
+    <div>
+        <h1>Hola, {{ user.first_name|default:user.username }}</h1>
+        <p>{% if es_admin %}Usted administra el catálogo de canciones y artistas.{% else %}Arme sus playlists con canciones del catálogo.{% endif %}</p>
+    </div>
+    <a href="{% url 'listar_playlists' %}" class="btn btn-primary">Nueva playlist</a>
+</div>
+
+<div class="cifras">
+    <a class="cifra" href="{% url 'listar_canciones' %}">
+        <strong>{{ total_canciones|miles }}</strong><span>canciones en el catálogo</span>
+    </a>
+    <a class="cifra" href="{% url 'listar_artistas' %}">
+        <strong>{{ total_artistas|miles }}</strong><span>artistas</span>
+    </a>
+    <a class="cifra" href="{% url 'listar_playlists' %}">
+        <strong>{{ total_mis_playlists|miles }}</strong><span>playlists suyas</span>
+    </a>
+</div>
+
+<div class="d-flex justify-content-between align-items-baseline mb-3">
+    <h2 class="h4 m-0">Sus playlists recientes</h2>
+    {% if total_mis_playlists > 6 %}<a href="{% url 'listar_playlists' %}">Ver todas</a>{% endif %}
+</div>
+{% if mis_playlists %}
+    <div class="rejilla-playlists mb-5">
+        {% for playlist in mis_playlists %}
+            {% include 'productos/_tarjeta_playlist.html' %}
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="panel mb-5">
+        Todavía no tiene playlists. <a href="{% url 'listar_playlists' %}">Cree la primera</a> y agréguele canciones desde el buscador.
+    </div>
+{% endif %}
+
+{% if publicas_recientes %}
+    <div class="d-flex justify-content-between align-items-baseline mb-3">
+        <h2 class="h4 m-0">Compartidas por otros usuarios</h2>
+        <a href="{% url 'explorar_playlists' %}">Explorar</a>
+    </div>
+    <div class="rejilla-playlists">
+        {% for playlist in publicas_recientes %}
+            {% include 'productos/_tarjeta_playlist.html' with mostrar_autor=True %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock %}

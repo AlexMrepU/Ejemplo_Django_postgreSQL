@@ -1,0 +1,76 @@
+{% extends 'productos/base.html' %}
+
+{% comment %}
+    Plantilla genérica para crear y editar artistas, canciones y playlists.
+    Recibe: form, titulo, url_cancelar (nombre de la URL a la que vuelve).
+{% endcomment %}
+
+{% block titulo %}{{ titulo }} | Playlist Manager{% endblock %}
+
+{% block contenido %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+
+        <div class="encabezado"><h1>{{ titulo }}</h1></div>
+
+        <div class="panel">
+            <div>
+
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% for campo in form %}
+                        {% if campo.widget_type == 'checkbox' %}
+                        <div class="form-check mb-3">
+                            {{ campo }}
+                            <label class="form-check-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+                            {% if campo.help_text %}<div class="form-text">{{ campo.help_text }}</div>{% endif %}
+                        </div>
+                        {% else %}
+                        <div class="mb-3">
+                            <label for="{{ campo.id_for_label }}" class="form-label">
+                                {{ campo.label }}{% if campo.field.required %} <span class="text-danger">*</span>{% endif %}
+                            </label>
+
+                            {% if campo.errors %}
+                                {# Marca el campo en rojo usando la clase is-invalid de Bootstrap #}
+                                <div class="is-invalid-wrapper">{{ campo }}</div>
+                                {% for error in campo.errors %}
+                                    <div class="text-danger small mt-1">{{ error }}</div>
+                                {% endfor %}
+                            {% else %}
+                                {{ campo }}
+                            {% endif %}
+
+                            {% if campo.help_text %}
+                                <div class="form-text">{{ campo.help_text }}</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <a href="{% url url_cancelar %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .is-invalid-wrapper .form-control,
+    .is-invalid-wrapper .form-select { border-color: var(--bs-danger); }
+</style>
+
+{% endblock %}

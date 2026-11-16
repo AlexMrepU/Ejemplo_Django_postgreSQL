@@ -1,0 +1,50 @@
+{% extends 'productos/base.html' %}
+
+{% comment %}
+    Plantilla genérica de confirmación de borrado.
+    Recibe: objeto, tipo ('artista', 'canción', 'playlist'), url_cancelar,
+            avisos (lista de textos) y bloqueado (True si no se puede borrar).
+{% endcomment %}
+
+{% block titulo %}Eliminar {{ tipo }} | Playlist Manager{% endblock %}
+
+{% block contenido %}
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+
+        <div class="panel border-danger">
+            <div>
+
+                <h1 class="h3">Eliminar {{ tipo }}</h1>
+
+                <p class="mb-3">
+                    {% if bloqueado %}
+                        No es posible eliminar <strong>{{ objeto }}</strong>.
+                    {% else %}
+                        ¿Está seguro de que desea eliminar <strong>{{ objeto }}</strong>?
+                        Esta acción no se puede deshacer.
+                    {% endif %}
+                </p>
+
+                {% for aviso in avisos %}
+                    <div class="alert alert-warning">{{ aviso }}</div>
+                {% endfor %}
+
+                <form method="POST" class="d-flex gap-2">
+                    {% csrf_token %}
+                    {% if not bloqueado %}
+                        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+                    {% endif %}
+                    <a href="{% url url_cancelar %}" class="btn btn-outline-secondary">
+                        {% if bloqueado %}Volver{% else %}Cancelar{% endif %}
+                    </a>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

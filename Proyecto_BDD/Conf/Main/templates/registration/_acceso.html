@@ -1,0 +1,30 @@
+{% extends 'productos/base.html' %}
+{% comment %}
+    Diseño de dos columnas para login y registro (sin menú lateral,
+    porque el usuario todavía no ha iniciado sesión).
+{% endcomment %}
+{% block cuerpo %}
+<div class="acceso">
+    <section class="acceso-marca">
+        <a class="marca p-0" href="{% url 'login' %}">Playlist <span>Manager</span></a>
+        <div>
+            <h1>Su música, <span>en orden.</span></h1>
+            <p>Busque en un catálogo de miles de canciones, arme sus playlists y compártalas si quiere.</p>
+        </div>
+        <div class="acceso-mosaico" aria-hidden="true">
+            <div class="portada" style="--tono: 20"><i></i><i></i><i></i><i></i></div>
+            <div class="portada" style="--tono: 190"><i></i><i></i><i></i><i></i></div>
+            <div class="portada" style="--tono: 300"><i></i><i></i><i></i><i></i></div>
+            <div class="portada" style="--tono: 95"><i></i><i></i><i></i><i></i></div>
+        </div>
+    </section>
+    <section class="acceso-formulario">
+        <div>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+            {% block formulario %}{% endblock %}
+        </div>
+    </section>
+</div>
+{% endblock %}
